@@ -26,7 +26,7 @@ public class NeuronTest {
         MockNeuron descendant = new MockNeuron();
         DefaultNeuron neuron = DefaultNeuron.create(asList(descendant));
 
-        Integer expectedValue = 1;
+        Double expectedValue = 1d;
         neuron.feed(expectedValue);
         assertEquals(expectedValue, descendant.getFed());
     }

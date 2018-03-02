@@ -23,7 +23,7 @@ public class DefaultNeuron implements Neuron {
         return new DefaultNeuron(descendants);
     }
 
-    public void feed(int i) {
+    public void feed(double i) {
         axons.forEach(a -> a.feed(i));
     }
 

@@ -1,5 +1,5 @@
 public interface Neuron {
-    void feed(int i);
+    void feed(double i);
 
     void addAncestor(Neuron ancestor);
 }

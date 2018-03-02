@@ -1,3 +1,3 @@
 public interface Axon {
-    void feed(int i);
+    void feed(double i);
 }

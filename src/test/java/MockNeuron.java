@@ -1,9 +1,9 @@
 public class MockNeuron implements Neuron {
 
-    private Integer fed;
+    private Double fed;
 
     @Override
-    public void feed(int i) {
+    public void feed(double i) {
         fed = i;
     }
 
@@ -12,7 +12,7 @@ public class MockNeuron implements Neuron {
 
     }
 
-    public Integer getFed() {
+    public Double getFed() {
         return fed;
     }
 }
