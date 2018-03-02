@@ -45,10 +45,11 @@ public class NeuronTest {
     }
 
     private Neuron xorNet(Transmitter a, Transmitter b) {
+        System.out.println("A output: " + a.output());
+        System.out.println("B output: " + a.output());
         return Neuron.create("EndNeuron",
-                Pair.of(Neuron.create(Pair.of(a, -0.1d), Pair.of(b, -0.5d)), -1.7d),
-                Pair.of(Neuron.create(Pair.of(a, 0.4d), Pair.of(b, 0.1d)), 0.60d),
-                Pair.of(Neuron.create(Pair.of(a, -1.2d), Pair.of(b, -0.5d)), 0.1d)
+                Pair.of(Neuron.create("T", Pair.of(a, 1), Pair.of(b, 1)), 1),
+                Pair.of(Neuron.create("B", Pair.of(a, 1), Pair.of(b, 1)), 1)
         );
     }
 
