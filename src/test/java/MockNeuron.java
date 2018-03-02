@@ -22,6 +22,6 @@ public class MockNeuron implements Transmitter {
 
     @Override
     public double getLatestOutput() {
-        return 0;
+        return output;
     }
 }

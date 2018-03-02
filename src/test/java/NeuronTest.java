@@ -78,17 +78,27 @@ public class NeuronTest {
         MockNeuron inputB = new MockNeuron(0);
         Neuron result = xorNet(inputA, inputB);
 
-        for (int i = 0; i < 10000; i++) {
-            result.backpropagate(0);
+        for (int i = 0; i < 100; i++) {
+            inputA.setOutput(0);
+            inputB.setOutput(0);
+            for (int j = 0; j < 10; j++) {
+                result.backpropagate(0);
+            }
             inputA.setOutput(1);
             inputB.setOutput(0);
-            result.backpropagate(1);
+            for (int j = 0; j < 10; j++) {
+                result.backpropagate(1);
+            }
             inputA.setOutput(0);
             inputB.setOutput(1);
-            result.backpropagate(1);
+            for (int j = 0; j < 10; j++) {
+                result.backpropagate(1);
+            }
             inputA.setOutput(1);
             inputB.setOutput(1);
-            result.backpropagate(0);
+            for (int j = 0; j < 10; j++) {
+                result.backpropagate(0);
+            }
         }
 
     }

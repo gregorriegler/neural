@@ -7,7 +7,7 @@ public class Neuron implements Transmitter {
 
     private final String name;
     private final List<Pair> predecessors;
-    private final double bias = 1;
+    private final double bias = 0;
     private double latestOutput;
 
     public Neuron(String name, Pair... predecessors) {
@@ -37,7 +37,7 @@ public class Neuron implements Transmitter {
     }
 
     private static double round(double value) {
-        return (double)Math.round(value * 1000d) / 1000d;
+        return value;//(double)Math.round(value * 1000d) / 1000d;
     }
 
     private static double sigmoid(double x) {
