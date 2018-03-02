@@ -1,33 +1,30 @@
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import javafx.util.Pair;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NeuronTest {
 
     @Test
-    void createNeuron() {
-        assertNotNull(DefaultNeuron.create());
-    }
+    void xor() {
+        //Input Layer
+        Neuron a = Neuron.create();
+        Neuron b = Neuron.create();
 
-    @Test
-    void createWithDescendant() {
-        DefaultNeuron descendant = DefaultNeuron.create();
-        DefaultNeuron neuron = DefaultNeuron.create(asList(descendant));
+        //Middle Layer
+        Neuron middleTop = Neuron.create(new Pair<>(a, 1d), new Pair<>(b, 1d));
+        Neuron middleBottom = Neuron.create(new Pair<>(a, 1d), new Pair<>(b, 1d));
 
-        assertNotNull(neuron);
-        assertThat(descendant.getAncestors()).contains(neuron);
-    }
+        //Output Layer
+        Neuron res1 = Neuron.create(new Pair<>(middleTop, 1d), new Pair<>(middleBottom, 1d));
+        Neuron res0 = Neuron.create(new Pair<>(middleTop, 1d), new Pair<>(middleBottom, 1d));
 
-    @Test
-    void feedNeuronPassesToDescendant() {
-        MockNeuron descendant = new MockNeuron();
-        DefaultNeuron neuron = DefaultNeuron.create(asList(descendant));
-
-        Double expectedValue = 1d;
-        neuron.feed(expectedValue);
-        assertEquals(expectedValue, descendant.getFed());
+        a.trigger(0);
+        b.trigger(0);
+        middleTop.live();
+        middleBottom.live();
+        assertThat(res1.result()).isEqualTo(0d);
+        assertThat(res0.result()).isEqualTo(0d);
     }
 }
