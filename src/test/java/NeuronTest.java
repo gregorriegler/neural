@@ -1,30 +1,47 @@
 import javafx.util.Pair;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NeuronTest {
 
+    public static final Transmitter ZERO = () -> 0;
+    public static final Transmitter ONE = () -> 1;
+
     @Test
-    void xor() {
-        //Input Layer
-        Neuron a = Neuron.create();
-        Neuron b = Neuron.create();
-
+    void simple() {
         //Middle Layer
-        Neuron middleTop = Neuron.create(new Pair<>(a, 1d), new Pair<>(b, 1d));
-        Neuron middleBottom = Neuron.create(new Pair<>(a, 1d), new Pair<>(b, 1d));
+        Neuron output = Neuron.create(new Pair<>(ZERO, 1d));
 
-        //Output Layer
-        Neuron res1 = Neuron.create(new Pair<>(middleTop, 1d), new Pair<>(middleBottom, 1d));
-        Neuron res0 = Neuron.create(new Pair<>(middleTop, 1d), new Pair<>(middleBottom, 1d));
-
-        a.trigger(0);
-        b.trigger(0);
-        middleTop.live();
-        middleBottom.live();
-        assertThat(res1.result()).isEqualTo(0d);
-        assertThat(res0.result()).isEqualTo(0d);
+        assertThat(output.output()).isEqualTo(1d);
     }
+
+    private Neuron xorNet(Transmitter a, Transmitter b) {
+        return Neuron.create(
+                new Pair<>(Neuron.create(new Pair<>(a, -0.1d), new Pair<>(b, -0.5d)), -1.7d),
+                new Pair<>(Neuron.create(new Pair<>(a, 0.4d), new Pair<>(b, 0.33333333333d)), 0.60d),
+                new Pair<>(Neuron.create(new Pair<>(a, -1.2d), new Pair<>(b, -0.5d)), 0.1d)
+        );
+    }
+
+    @Test
+    void xor_0_0() {
+        assertThat(xorNet(ZERO, ZERO).output()).isEqualTo(0);
+    }
+
+    @Test
+    void xor_0_1() {
+        assertThat(xorNet(ZERO, ONE).output()).isEqualTo(1);
+    }
+
+    @Test
+    void xor_1_0() {
+        assertThat(xorNet(ONE, ZERO).output()).isEqualTo(1);
+    }
+    @Test
+    void xor_1_1() {
+        assertThat(xorNet(ONE, ONE).output()).isEqualTo(0);
+    }
+
+
 }

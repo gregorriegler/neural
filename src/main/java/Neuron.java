@@ -1,47 +1,31 @@
 import javafx.util.Pair;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
 
-public class Neuron {
+public class Neuron implements Transmitter {
 
-    private final Map<Neuron, Double> predecessors;
-    private final List<Neuron> descendants;
-    private Map<Neuron, Double> input = new HashMap<>();
+    private final List<Pair<Transmitter, Double>> predecessors;
+    private final double bias = 1;
 
-    public Neuron(Pair<Neuron, Double>... predecessors) {
-        this.predecessors = Arrays.stream(predecessors)
-                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-        this.descendants = new ArrayList<>();
+    public Neuron(Pair<Transmitter, Double>... predecessors) {
+        this.predecessors = Arrays.asList(predecessors);
     }
 
     public static Neuron create() {
         return new Neuron();
     }
 
-    public static Neuron create(Pair<Neuron, Double>... predecessors) {
+    public static Neuron create(Pair<Transmitter, Double>... predecessors) {
         return new Neuron(predecessors);
     }
 
-    public boolean hasAllInputs() {
-        return predecessors.keySet().equals(input.keySet());
-    }
-
-    public void feed(Neuron neuron, double value) {
-        input.put(neuron, predecessors.get(neuron) * value);
-    }
-
-    public void trigger(double value) {
-        descendants.forEach(d -> d.feed(this, value));
-    }
-
-    public void live() {
-        if (!hasAllInputs()) return;
-        double result = result();
-        descendants.forEach(d -> d.feed(this, result));
-    }
-
-    public double result() {
-        return Math.max(0, input.values().stream().mapToDouble(d -> d).sum());
+    public double output() {
+        return Math.max(
+                0,
+                predecessors.stream()
+                        .mapToDouble(n -> n.getKey().output() * n.getValue())
+                        .sum() + bias
+        );
     }
 }
