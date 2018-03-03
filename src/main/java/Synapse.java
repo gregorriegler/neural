@@ -15,16 +15,12 @@ public class Synapse {
         return neuron;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
     public Double getWeight() {
         return weight;
     }
 
     public void backpropagate(double error, double learningRate) {
         weight = weight + learningRate * error * neuron.getLatestOutput();
-        neuron.hiddenBackpropagate(error, weight, learningRate);
+        neuron.backpropagate(error, weight, learningRate);
     }
 }

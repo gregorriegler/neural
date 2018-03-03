@@ -31,22 +31,14 @@ public class Neuron {
     public void backpropagate(double expected, double learningRate) {
         output();
         double error = (expected - latestOutput) * derivative(latestOutput);
-        bias = bias + learningRate * error;
-
+        adaptBias(learningRate, error);
         predecessors.forEach(synapse -> synapse.backpropagate(error, learningRate));
     }
 
-    public void hiddenBackpropagate(double descendantError, double currentWeight, double learningRate) {
+    public void backpropagate(double descendantError, double currentWeight, double learningRate) {
         double error = currentWeight * descendantError * derivative(latestOutput);
-        bias = bias + learningRate * error;
-
-        predecessors.forEach(synapse -> {
-            //changes synapse
-            synapse.setWeight(synapse.getWeight() + learningRate * error * synapse.getNeuron().getLatestOutput());
-
-            //changes neuron
-            synapse.getNeuron().hiddenBackpropagate(error, synapse.getWeight(), learningRate);
-        });
+        adaptBias(learningRate, error);
+        predecessors.forEach(synapse -> synapse.backpropagate(error, learningRate));
     }
 
     private double sigmoid(double x) {
@@ -55,5 +47,9 @@ public class Neuron {
 
     private double derivative(double output) {
         return output * (1 - output);
+    }
+
+    private void adaptBias(double learningRate, double error) {
+        bias = bias + learningRate * error;
     }
 }

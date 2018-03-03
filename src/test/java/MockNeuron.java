@@ -22,7 +22,7 @@ public class MockNeuron extends Neuron {
     }
 
     @Override
-    public void hiddenBackpropagate(double descendantError, double currentWeight, double learningRate) {
+    public void backpropagate(double descendantError, double currentWeight, double learningRate) {
 
     }
 

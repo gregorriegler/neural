@@ -7,6 +7,9 @@ public class NeuronTest {
 
     public static final Neuron ZERO = new MockNeuron(0);
     public static final Neuron ONE = new MockNeuron(1);
+    private MockNeuron A = new MockNeuron(0);
+    private MockNeuron B = new MockNeuron(0);
+    private Neuron network;
 
     private Neuron workingXorNet(Neuron a, Neuron b) {
         return Neuron.create(-30,
@@ -38,8 +41,22 @@ public class NeuronTest {
     private Neuron nonWorkingXorNet(Neuron a, Neuron b) {
         return Neuron.create(
                 random(),
-                Synapse.to(Neuron.create(random(), Synapse.to(a, random()), Synapse.to(b, random())), random()),
-                Synapse.to(Neuron.create(random(), Synapse.to(a, random()), Synapse.to(b, random())), random())
+                Synapse.to(
+                        Neuron.create(
+                                random(),
+                                Synapse.to(a, random()),
+                                Synapse.to(b, random())
+                        ),
+                        random()
+                ),
+                Synapse.to(
+                        Neuron.create(
+                                random(),
+                                Synapse.to(a, random()),
+                                Synapse.to(b, random())
+                        ),
+                        random()
+                )
         );
     }
 
@@ -50,67 +67,42 @@ public class NeuronTest {
     @Test
     void xor_backpropagate() {
         double learningRate = 7;
-        MockNeuron inputA = new MockNeuron(0);
-        MockNeuron inputB = new MockNeuron(0);
-        Neuron result = nonWorkingXorNet(inputA, inputB);
+        network = nonWorkingXorNet(A, B);
 
+        input(0, 0).andPrintResult(network.output());
+        input(0, 1).andPrintResult(network.output());
+        input(1, 0).andPrintResult(network.output());
+        input(1, 1).andPrintResult(network.output());
 
-        inputA.spoofOutput(0);
-        inputB.spoofOutput(0);
-        System.out.println("0, 0 -> " + result.output());
-
-        inputA.spoofOutput(0);
-        inputB.spoofOutput(1);
-        System.out.println("0, 1 -> " + result.output());
-
-        inputA.spoofOutput(1);
-        inputB.spoofOutput(0);
-        System.out.println("1, 0 -> " + result.output());
-
-        inputA.spoofOutput(1);
-        inputB.spoofOutput(1);
-        System.out.println("1, 1 -> " + result.output());
-
-        for (int i = 0; i < 100000; i++) {
-            inputA.spoofOutput(0);
-            inputB.spoofOutput(0);
-            result.backpropagate(0, learningRate);
-            inputA.spoofOutput(1);
-            inputB.spoofOutput(0);
-            result.backpropagate(1, learningRate);
-            inputA.spoofOutput(0);
-            inputB.spoofOutput(1);
-            result.backpropagate(1, learningRate);
-            inputA.spoofOutput(1);
-            inputB.spoofOutput(1);
-            result.backpropagate(0, learningRate);
+        for (int i = 0; i < 1000000; i++) {
+            input(0, 0).network.backpropagate(0, learningRate);
+            input(1, 0).network.backpropagate(1, learningRate);
+            input(0, 1).network.backpropagate(1, learningRate);
+            input(1, 1).network.backpropagate(0, learningRate);
         }
+        System.out.println("-finished-learning---------------------------");
 
-        System.out.println("-----------------------------");
+        input(0, 0).andPrintResult(network.output());
+        assertThat(network.getLatestOutput()).isCloseTo(0, offset(0.01));
 
-        inputA.spoofOutput(0);
-        inputB.spoofOutput(0);
-        double zeroZeroOutput = result.output();
-        System.out.println("0, 0 -> " + zeroZeroOutput);
-        assertThat(zeroZeroOutput).isCloseTo(0, offset(0.01));
+        input(0, 1).andPrintResult(network.output());
+        assertThat(network.getLatestOutput()).isCloseTo(1, offset(0.01));
 
-        inputA.spoofOutput(0);
-        inputB.spoofOutput(1);
-        double zeroOneOutput = result.output();
-        System.out.println("0, 1 -> " + zeroOneOutput);
-        assertThat(zeroOneOutput).isCloseTo(1, offset(0.01));
+        input(1, 0).andPrintResult(network.output());
+        assertThat(network.getLatestOutput()).isCloseTo(1, offset(0.01));
 
-        inputA.spoofOutput(1);
-        inputB.spoofOutput(0);
-        double oneZeroOutput = result.output();
-        System.out.println("1, 0 -> " + oneZeroOutput);
-        assertThat(oneZeroOutput).isCloseTo(1, offset(0.01));
+        input(1, 1).andPrintResult(network.output());
+        assertThat(network.getLatestOutput()).isCloseTo(0, offset(0.01));
+    }
 
-        inputA.spoofOutput(1);
-        inputB.spoofOutput(1);
-        double oneOneOutput = result.output();
-        System.out.println("1, 1 -> " + oneOneOutput);
-        assertThat(oneOneOutput).isCloseTo(0, offset(0.01));
+    private NeuronTest input(double a, double b) {
+        A.spoofOutput(a);
+        B.spoofOutput(b);
+        return this;
+    }
+
+    private void andPrintResult(double result) {
+        System.out.println(A.output() + ", " + B.output() + " -> " + result);
     }
 
 
