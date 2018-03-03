@@ -17,27 +17,17 @@ public class MockNeuron extends Neuron {
     }
 
     @Override
-    public void backpropagate(double expected, double rate) {
+    public void backpropagate(double expected, double learningRate) {
 
     }
 
     @Override
-    public void hiddenBackpropagate(double descendantError, double currentWeight, double rate) {
+    public void hiddenBackpropagate(double descendantError, double currentWeight, double learningRate) {
 
     }
 
     @Override
     public double getLatestOutput() {
         return spoofedOutput;
-    }
-
-    @Override
-    public void setBias(double bias) {
-
-    }
-
-    @Override
-    public double getBias() {
-        return 0;
     }
 }

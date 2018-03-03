@@ -71,7 +71,7 @@ public class NeuronTest {
         inputB.spoofOutput(1);
         System.out.println("1, 1 -> " + result.output());
 
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100000; i++) {
             inputA.spoofOutput(0);
             inputB.spoofOutput(0);
             result.backpropagate(0, learningRate);
