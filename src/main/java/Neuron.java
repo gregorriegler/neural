@@ -19,6 +19,7 @@ public class Neuron implements Transmitter {
     public static Neuron create(double bias, Pair... predecessors) {
         return new Neuron("neuron", bias, predecessors);
     }
+
     public static Neuron create(String name, double bias, Pair... predecessors) {
         return new Neuron(name, bias, predecessors);
     }
@@ -29,12 +30,11 @@ public class Neuron implements Transmitter {
                 .sum() + bias;
         latestOutput = round(sigmoid(result));
 
-        System.out.println(name + " output: " + latestOutput);
         return latestOutput;
     }
 
     private double round(double value) {
-        return Math.round(value*1000)/1000;
+        return Math.round(value * 1000) / 1000;
     }
 
 
@@ -42,20 +42,56 @@ public class Neuron implements Transmitter {
         return latestOutput;
     }
 
+    @Override
+    public void setBias(double bias) {
+        this.bias = bias;
+    }
+
+    @Override
+    public double getBias() {
+        return bias;
+    }
+
     private static double sigmoid(double x) {
         return new Sigmoid(0, 1).value(x);
     }
 
     public void backpropagate(double expected) {
-        output();
-        double error = Math.pow(latestOutput - expected, 2);
-        if(name.equals("EndNeuron")) System.out.println(name + ": expected: " + expected + " output: " + latestOutput + " error: " + error);
-//        double delta = expected - latestOutput;
-        predecessors.forEach(predecessor -> {
-            double delta = expected-predecessor.getTransmitter().getLatestOutput();
+        double output = output();
 
-            predecessor.setWeight(predecessor.getWeight() + (delta * error));
-            predecessor.getTransmitter().backpropagate(expected);
+        double error = Math.pow(latestOutput - expected, 2);
+        System.out.println(name + ": expected: " + expected + " output: " + latestOutput + " error: " + error);
+
+        predecessors.forEach(predecessor -> {
+
+            double deltaOutpout = derivative(output) * (output - expected);
+
+            System.out.println("delta: " + deltaOutpout);
+            double newWeight = -.1 * deltaOutpout * predecessor.getTransmitter().getLatestOutput();
+            System.out.println("old weight: " + predecessor.getWeight() + " new weight: " + newWeight);
+            predecessor.setWeight(newWeight);
+            double newBias = .1 * deltaOutpout;
+            System.out.println("old bias: " + predecessor.getTransmitter().getBias() + " new bias: " + newBias);
+            predecessor.getTransmitter().setBias(newBias);
+
+            predecessor.getTransmitter().hiddenBackpropagate(deltaOutpout * predecessor.getWeight());
         });
+    }
+
+    public void hiddenBackpropagate(double deltaOutpout) {
+        predecessors.forEach(predecessor -> {
+
+            //hidden layer
+            double dj = derivative(latestOutput) * deltaOutpout * predecessor.getWeight();
+
+            predecessor.setWeight(-.1 * dj * predecessor.getTransmitter().getLatestOutput());
+            predecessor.getTransmitter().setBias(.1 * dj);
+
+            predecessor.getTransmitter().backpropagate(dj * predecessor.getWeight());
+        });
+    }
+
+    private double derivative(double output) {
+        return output * (1 - output);
     }
 }

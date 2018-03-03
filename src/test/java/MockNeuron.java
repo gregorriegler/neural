@@ -12,6 +12,7 @@ public class MockNeuron implements Transmitter {
 
     @Override
     public double output() {
+        System.out.print(" " + output + " ");
         return output;
     }
 
@@ -21,7 +22,22 @@ public class MockNeuron implements Transmitter {
     }
 
     @Override
+    public void hiddenBackpropagate(double delta) {
+
+    }
+
+    @Override
     public double getLatestOutput() {
         return output;
+    }
+
+    @Override
+    public void setBias(double bias) {
+
+    }
+
+    @Override
+    public double getBias() {
+        return 0;
     }
 }

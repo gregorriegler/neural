@@ -1,46 +1,14 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NeuronTest {
 
-    public static final Transmitter ZERO = new Transmitter() {
-        @Override
-        public double output() {
-            return 0;
-        }
+    public static final Transmitter ZERO = new MockNeuron(0);
 
-        @Override
-        public void backpropagate(double expected) {
-        }
-
-        @Override
-        public double getLatestOutput() {
-            return 0;
-        }
-    };
-
-    public static final Transmitter ONE = new Transmitter() {
-        @Override
-        public double output() {
-            return 1;
-        }
-
-        @Override
-        public void backpropagate(double expected) {
-
-        }
-
-        @Override
-        public double getLatestOutput() {
-            return 0;
-        }
-    };
+    public static final Transmitter ONE = new MockNeuron(1);
 
     private Neuron xorNet(Transmitter a, Transmitter b) {
-        System.out.println("A output: " + a.output());
-        System.out.println("B output: " + a.output());
         return Neuron.create("EndNeuron", -30,
                 Pair.of(Neuron.create("T", -10, Pair.of(a, 20), Pair.of(b, 20)), 20),
                 Pair.of(Neuron.create("B", 30, Pair.of(a, -20), Pair.of(b, -20)), 20)
@@ -68,7 +36,6 @@ public class NeuronTest {
     }
 
     @Test
-    @Disabled
     void xor_backpropagate() {
         MockNeuron inputA = new MockNeuron(0);
         MockNeuron inputB = new MockNeuron(0);
