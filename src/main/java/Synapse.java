@@ -22,4 +22,9 @@ public class Synapse {
     public Double getWeight() {
         return weight;
     }
+
+    public void backpropagate(double error, double learningRate) {
+        weight = weight + learningRate * error * neuron.getLatestOutput();
+        neuron.hiddenBackpropagate(error, weight, learningRate);
+    }
 }

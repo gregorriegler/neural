@@ -33,10 +33,7 @@ public class Neuron {
         double error = (expected - latestOutput) * derivative(latestOutput);
         bias = bias + learningRate * error;
 
-        predecessors.forEach(synapse -> {
-            synapse.setWeight(synapse.getWeight() + learningRate * error * synapse.getNeuron().getLatestOutput());
-            synapse.getNeuron().hiddenBackpropagate(error, synapse.getWeight(), learningRate);
-        });
+        predecessors.forEach(synapse -> synapse.backpropagate(error, learningRate));
     }
 
     public void hiddenBackpropagate(double descendantError, double currentWeight, double learningRate) {
@@ -44,7 +41,10 @@ public class Neuron {
         bias = bias + learningRate * error;
 
         predecessors.forEach(synapse -> {
+            //changes synapse
             synapse.setWeight(synapse.getWeight() + learningRate * error * synapse.getNeuron().getLatestOutput());
+
+            //changes neuron
             synapse.getNeuron().hiddenBackpropagate(error, synapse.getWeight(), learningRate);
         });
     }
