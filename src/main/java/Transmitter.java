@@ -1,9 +1,9 @@
 public interface Transmitter {
     double output();
 
-    void backpropagate(double expected);
+    void backpropagate(double expected, double rate);
 
-    void hiddenBackpropagate(double delta);
+    void hiddenBackpropagate(double descendantError, double currentWeight, double rate);
 
     double getLatestOutput();
 

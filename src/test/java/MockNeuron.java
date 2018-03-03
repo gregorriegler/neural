@@ -12,17 +12,17 @@ public class MockNeuron implements Transmitter {
 
     @Override
     public double output() {
-        System.out.print(" " + output + " ");
+//        System.out.print(" " + output + " ");
         return output;
     }
 
     @Override
-    public void backpropagate(double expected) {
+    public void backpropagate(double expected, double rate) {
 
     }
 
     @Override
-    public void hiddenBackpropagate(double delta) {
+    public void hiddenBackpropagate(double descendantError, double currentWeight, double rate) {
 
     }
 
