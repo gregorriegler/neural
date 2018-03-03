@@ -70,7 +70,7 @@ public class NeuronTest {
         inputB.setOutput(1);
         System.out.println("1, 1 -> " + result.output());
 
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             inputA.setOutput(0);
             inputB.setOutput(0);
             result.backpropagate(0, rate);
