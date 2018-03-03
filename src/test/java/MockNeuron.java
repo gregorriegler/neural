@@ -1,19 +1,19 @@
-public class MockNeuron implements Transmitter {
+public class MockNeuron extends Neuron {
 
-    private double output;
+    private double spoofedOutput;
 
     public MockNeuron(double output) {
-        this.output = output;
+        super(0d);
+        this.spoofedOutput = output;
     }
 
-    public void setOutput(double output) {
-        this.output = output;
+    public void spoofOutput(double spoofedOutput) {
+        this.spoofedOutput = spoofedOutput;
     }
 
     @Override
     public double output() {
-//        System.out.print(" " + output + " ");
-        return output;
+        return spoofedOutput;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class MockNeuron implements Transmitter {
 
     @Override
     public double getLatestOutput() {
-        return output;
+        return spoofedOutput;
     }
 
     @Override
