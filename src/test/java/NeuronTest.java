@@ -1,7 +1,7 @@
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
+
+import org.junit.jupiter.api.Test;
 
 public class NeuronTest {
 
@@ -13,8 +13,8 @@ public class NeuronTest {
 
     private Neuron workingXorNet(Neuron a, Neuron b) {
         return Neuron.create(-30,
-                Synapse.to(Neuron.create(-10, Synapse.to(a, 20), Synapse.to(b, 20)), 20),
-                Synapse.to(Neuron.create(30, Synapse.to(a, -20), Synapse.to(b, -20)), 20)
+            Synapse.to(Neuron.create(-10, Synapse.to(a, 20), Synapse.to(b, 20)), 20),
+            Synapse.to(Neuron.create(30, Synapse.to(a, -20), Synapse.to(b, -20)), 20)
         );
     }
 
@@ -40,23 +40,31 @@ public class NeuronTest {
 
     private Neuron nonWorkingXorNet(Neuron a, Neuron b) {
         return Neuron.create(
-                random(),
-                Synapse.to(
-                        Neuron.create(
-                                random(),
-                                Synapse.to(a, random()),
-                                Synapse.to(b, random())
-                        ),
-                        random()
+            random(),
+            Synapse.to(
+                Neuron.create(
+                    random(),
+                    Synapse.to(a, random()),
+                    Synapse.to(b, random())
                 ),
-                Synapse.to(
-                        Neuron.create(
-                                random(),
-                                Synapse.to(a, random()),
-                                Synapse.to(b, random())
-                        ),
-                        random()
-                )
+                random()
+            ),
+            Synapse.to(
+                Neuron.create(
+                    random(),
+                    Synapse.to(a, random()),
+                    Synapse.to(b, random())
+                ),
+                random()
+            ),
+            Synapse.to(
+                Neuron.create(
+                    random(),
+                    Synapse.to(a, random()),
+                    Synapse.to(b, random())
+                ),
+                random()
+            )
         );
     }
 
@@ -74,7 +82,7 @@ public class NeuronTest {
         input(1, 0).andPrintResult(network.output());
         input(1, 1).andPrintResult(network.output());
 
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100000; i++) {
             input(0, 0).network.backpropagate(0, learningRate);
             input(1, 0).network.backpropagate(1, learningRate);
             input(0, 1).network.backpropagate(1, learningRate);
